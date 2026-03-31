@@ -1,0 +1,64 @@
+// Layer 2: Data enrichment
+
+model BusinessDataSource {
+  id         String    @id @default(uuid()) @db.Uuid
+  businessId String    @map("business_id") @db.Uuid
+  sourceType String    @map("source_type")
+  url        String
+  scrapedAt  DateTime? @map("scraped_at")
+
+  business        Business         @relation(fields: [businessId], references: [id])
+  scrapedProfiles ScrapedProfile[]
+
+  @@index([businessId])
+  @@map("business_data_sources")
+}
+
+model ScrapedProfile {
+  id            String   @id @default(uuid()) @db.Uuid
+  dataSourceId  String   @map("data_source_id") @db.Uuid
+  rating        Float?
+  reviewCount   Int?     @map("review_count")
+  businessHours Json?    @map("business_hours")
+  bio           String?
+  rawData       Json?    @map("raw_data")
+  scrapedAt     DateTime @default(now()) @map("scraped_at")
+
+  dataSource BusinessDataSource @relation(fields: [dataSourceId], references: [id])
+  reviews    BusinessReview[]
+
+  @@index([dataSourceId])
+  @@map("scraped_profiles")
+}
+
+model BusinessReview {
+  id               String @id @default(uuid()) @db.Uuid
+  scrapedProfileId String @map("scraped_profile_id") @db.Uuid
+  author           String
+  rating           Int
+  content          String
+  source           String
+
+  scrapedProfile ScrapedProfile @relation(fields: [scrapedProfileId], references: [id])
+
+  @@index([scrapedProfileId])
+  @@map("business_reviews")
+}
+
+model Competitor {
+  id            String   @id @default(uuid()) @db.Uuid
+  businessId    String   @map("business_id") @db.Uuid
+  name          String
+  googlePlaceId String?  @map("google_place_id")
+  rating        Float?
+  reviewCount   Int?     @map("review_count")
+  address       String?
+  website       String?
+  rawData       Json?    @map("raw_data")
+  discoveredAt  DateTime @default(now()) @map("discovered_at")
+
+  business Business @relation(fields: [businessId], references: [id])
+
+  @@index([businessId])
+  @@map("competitors")
+}

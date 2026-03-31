@@ -1,0 +1,79 @@
+// Layer 6: Category extensions (1-to-1 with businesses)
+
+model RestaurantDetails {
+  id                 String   @id @default(uuid()) @db.Uuid
+  businessId         String   @unique @map("business_id") @db.Uuid
+  subType            String   @map("sub_type")
+  experienceType     String   @map("experience_type")
+  serviceSpeed       String   @map("service_speed")
+  targetAudience     String   @map("target_audience")
+  cuisineTypes       String[] @map("cuisine_types")
+  avgPriceForTwo     Int?     @map("avg_price_for_two")
+  hasDelivery        Boolean  @default(false) @map("has_delivery")
+  deliveryPlatforms  String[] @map("delivery_platforms")
+  menuHighlights     String[] @map("menu_highlights")
+  specialOfferings   String[] @map("special_offerings")
+  acceptsReservation Boolean  @default(false) @map("accepts_reservation")
+
+  business Business @relation(fields: [businessId], references: [id])
+
+  @@map("restaurant_details")
+}
+
+model ClinicDetails {
+  id                   String   @id @default(uuid()) @db.Uuid
+  businessId           String   @unique @map("business_id") @db.Uuid
+  clinicType           String   @map("clinic_type")
+  specialty            String?
+  doctorName           String   @map("doctor_name")
+  qualification        String?
+  experienceYears      Int?     @map("experience_years")
+  appointmentType      String   @map("appointment_type")
+  targetPatient        String   @map("target_patient")
+  services             String[]
+  insuranceAccepted    Boolean  @default(false) @map("insurance_accepted")
+  consultationFeeRange String?  @map("consultation_fee_range")
+  hasDiagnosticLab     Boolean  @default(false) @map("has_diagnostic_lab")
+
+  business Business @relation(fields: [businessId], references: [id])
+
+  @@map("clinic_details")
+}
+
+model SalonDetails {
+  id                  String   @id @default(uuid()) @db.Uuid
+  businessId          String   @unique @map("business_id") @db.Uuid
+  salonType           String   @map("salon_type")
+  priceRange          String   @map("price_range")
+  targetCustomer      String   @map("target_customer")
+  ambianceType        String   @map("ambiance_type")
+  services            String[]
+  hasBridalPackage    Boolean  @default(false) @map("has_bridal_package")
+  appointmentRequired Boolean  @default(false) @map("appointment_required")
+  hasTrainedStylists  Boolean  @default(false) @map("has_trained_stylists")
+  specialtyTreatments String[] @map("specialty_treatments")
+
+  business Business @relation(fields: [businessId], references: [id])
+
+  @@map("salon_details")
+}
+
+model CoachingDetails {
+  id                 String   @id @default(uuid()) @db.Uuid
+  businessId         String   @unique @map("business_id") @db.Uuid
+  coachingType       String   @map("coaching_type")
+  subjects           String[]
+  targetGrades       String[] @map("target_grades")
+  examFocus          String[] @map("exam_focus")
+  batchTypes         String[] @map("batch_types")
+  demoClassAvailable Boolean  @default(false) @map("demo_class_available")
+  resultTrackRecord  String?  @map("result_track_record")
+  studentsPerBatch   Int?     @map("students_per_batch")
+  facultyCount       Int?     @map("faculty_count")
+  feeRange           String?  @map("fee_range")
+  hasOnlineMode      Boolean  @default(false) @map("has_online_mode")
+
+  business Business @relation(fields: [businessId], references: [id])
+
+  @@map("coaching_details")
+}

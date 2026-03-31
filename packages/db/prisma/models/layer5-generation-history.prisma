@@ -1,0 +1,115 @@
+// Layer 5: Generation history
+
+model WebsitePage {
+  id              String  @id @default(uuid()) @db.Uuid
+  businessId      String  @map("business_id") @db.Uuid
+  slug            String
+  title           String
+  metaDescription String? @map("meta_description")
+  displayOrder    Int     @map("display_order")
+
+  business   Business           @relation(fields: [businessId], references: [id])
+  sections   WebsiteSection[]
+  changeLogs SectionChangeLog[]
+
+  @@unique([businessId, slug])
+  @@index([businessId])
+  @@map("website_pages")
+}
+
+model WebsiteSectionSchema {
+  id             String   @id @default(uuid()) @db.Uuid
+  sectionType    String   @map("section_type")
+  version        String
+  jsonSchema     Json     @map("json_schema")
+  requiredFields String[] @map("required_fields")
+  optionalFields String[] @map("optional_fields")
+
+  sections WebsiteSection[]
+
+  @@unique([sectionType, version])
+  @@map("website_section_schemas")
+}
+
+model WebsiteSection {
+  id                String   @id @default(uuid()) @db.Uuid
+  websitePageId     String   @map("website_page_id") @db.Uuid
+  sectionSchemaId   String   @map("section_schema_id") @db.Uuid
+  sectionType       String   @map("section_type")
+  content           Json
+  processedImageIds String[] @map("processed_image_ids") @db.Uuid
+  displayOrder      Int      @map("display_order")
+  isCurrent         Boolean  @default(true) @map("is_current")
+  validationPassed  Boolean  @default(false) @map("validation_passed")
+  validationErrors  String[] @map("validation_errors")
+
+  page          WebsitePage          @relation(fields: [websitePageId], references: [id])
+  sectionSchema WebsiteSectionSchema @relation(fields: [sectionSchemaId], references: [id])
+  changeLogs    SectionChangeLog[]
+
+  @@index([websitePageId])
+  @@index([sectionSchemaId])
+  @@map("website_sections")
+}
+
+model WebsiteGeneration {
+  id              String   @id @default(uuid()) @db.Uuid
+  businessId      String   @map("business_id") @db.Uuid
+  iterationNumber Int      @map("iteration_number")
+  trigger         String
+  status          String   @default("running")
+  overallScore    Float?   @map("overall_score")
+  passedThreshold Boolean  @default(false) @map("passed_threshold")
+  generatedAt     DateTime @default(now()) @map("generated_at")
+
+  business     Business             @relation(fields: [businessId], references: [id])
+  changeLogs   SectionChangeLog[]
+  reviewScores WebsiteReviewScore[]
+
+  @@index([businessId])
+  @@map("website_generations")
+}
+
+model SectionChangeLog {
+  id                    String   @id @default(uuid()) @db.Uuid
+  websiteGenerationId   String   @map("website_generation_id") @db.Uuid
+  websiteSectionId      String   @map("website_section_id") @db.Uuid
+  websitePageId         String   @map("website_page_id") @db.Uuid
+  changeReason          String   @map("change_reason")
+  triggeredBy           String   @map("triggered_by")
+  previousContent       Json     @map("previous_content")
+  newContent            Json     @map("new_content")
+  scoreDimensionsFailed String[] @map("score_dimensions_failed")
+  scoreBefore           Float?   @map("score_before")
+  scoreAfter            Float?   @map("score_after")
+  changedAt             DateTime @default(now()) @map("changed_at")
+
+  generation WebsiteGeneration @relation(fields: [websiteGenerationId], references: [id])
+  section    WebsiteSection    @relation(fields: [websiteSectionId], references: [id])
+  page       WebsitePage       @relation(fields: [websitePageId], references: [id])
+
+  @@index([websiteGenerationId])
+  @@index([websiteSectionId])
+  @@index([websitePageId])
+  @@map("section_change_log")
+}
+
+model WebsiteReviewScore {
+  id                       String   @id @default(uuid()) @db.Uuid
+  websiteGenerationId      String   @map("website_generation_id") @db.Uuid
+  clarityScore             Float    @map("clarity_score")
+  trustScore               Float    @map("trust_score")
+  visualScore              Float    @map("visual_score")
+  conversionScore          Float    @map("conversion_score")
+  seoScore                 Float    @map("seo_score")
+  overallScore             Float    @map("overall_score")
+  failedChecks             String[] @map("failed_checks")
+  iterationRecommendations String[] @map("iteration_recommendations")
+  passedThreshold          Boolean  @default(false) @map("passed_threshold")
+  scoredAt                 DateTime @default(now()) @map("scored_at")
+
+  generation WebsiteGeneration @relation(fields: [websiteGenerationId], references: [id])
+
+  @@index([websiteGenerationId])
+  @@map("website_review_scores")
+}

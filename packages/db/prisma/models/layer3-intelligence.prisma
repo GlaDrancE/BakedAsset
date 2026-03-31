@@ -1,0 +1,61 @@
+// Layer 3: Intelligence / Decision
+
+model BusinessSignalProfile {
+  id               String   @id @default(uuid()) @db.Uuid
+  businessId       String   @unique @map("business_id") @db.Uuid
+  keyStrengths     String[] @map("key_strengths")
+  customerIntent   String   @map("customer_intent")
+  pricePositioning String   @map("price_positioning")
+  urgencyTriggers  String[] @map("urgency_triggers")
+  trustSignals     String[] @map("trust_signals")
+  localSeoKeywords String[] @map("local_seo_keywords")
+  generatedAt      DateTime @default(now()) @map("generated_at")
+
+  business   Business           @relation(fields: [businessId], references: [id])
+  strategies BusinessStrategy[]
+
+  @@map("business_signal_profile")
+}
+
+model CompetitorInsight {
+  id                  String   @id @default(uuid()) @db.Uuid
+  businessId          String   @unique @map("business_id") @db.Uuid
+  commonComplaints    String[] @map("common_complaints")
+  commonStrengths     String[] @map("common_strengths")
+  marketGap           String   @map("market_gap")
+  positioningGap      String   @map("positioning_gap")
+  avgCompetitorRating Float?   @map("avg_competitor_rating")
+  competitorsAnalyzed Int      @map("competitors_analyzed")
+  analyzedAt          DateTime @default(now()) @map("analyzed_at")
+
+  business   Business           @relation(fields: [businessId], references: [id])
+  strategies BusinessStrategy[]
+
+  @@map("competitor_insights")
+}
+
+model BusinessStrategy {
+  id                    String   @id @default(uuid()) @db.Uuid
+  businessId            String   @map("business_id") @db.Uuid
+  signalProfileId       String   @map("signal_profile_id") @db.Uuid
+  competitorInsightId   String   @map("competitor_insight_id") @db.Uuid
+  positioningStrategy   String   @map("positioning_strategy")
+  differentiationAngle  String   @map("differentiation_angle")
+  primaryValueProp      String   @map("primary_value_prop")
+  trustDrivers          String[] @map("trust_drivers")
+  contentPriority       String[] @map("content_priority")
+  ctaPrimary            String   @map("cta_primary")
+  ctaSecondary          String?  @map("cta_secondary")
+  targetAudienceProfile String   @map("target_audience_profile")
+  urgencyTriggers       String[] @map("urgency_triggers")
+  decidedAt             DateTime @default(now()) @map("decided_at")
+
+  business          Business              @relation(fields: [businessId], references: [id])
+  signalProfile     BusinessSignalProfile @relation(fields: [signalProfileId], references: [id])
+  competitorInsight CompetitorInsight     @relation(fields: [competitorInsightId], references: [id])
+
+  @@index([businessId])
+  @@index([signalProfileId])
+  @@index([competitorInsightId])
+  @@map("business_strategies")
+}
