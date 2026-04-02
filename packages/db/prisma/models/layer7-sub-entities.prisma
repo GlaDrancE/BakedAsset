@@ -1,0 +1,87 @@
+// Layer 7: Sub-entity tables
+
+model FacultyMember {
+  id               String  @id @default(uuid()) @db.Uuid
+  businessId        String  @map("business_id") @db.Uuid
+  name             String
+  photoAssetId      String? @map("photo_asset_id") @db.Uuid
+  qualification    String
+  specialization   String[]
+  experienceYears  Int     @map("experience_years")
+  achievement      String?
+  isFeatured       Boolean @default(false) @map("is_featured")
+  displayOrder     Int     @default(0) @map("display_order")
+  aiPositioningNote String? @map("ai_positioning_note")
+
+  business   Business    @relation(fields: [businessId], references: [id])
+  photoAsset MediaAsset? @relation("FacultyMemberPhoto", fields: [photoAssetId], references: [id])
+
+  @@index([businessId])
+  @@index([photoAssetId])
+  @@map("faculty_members")
+}
+
+model Doctor {
+  id                  String  @id @default(uuid()) @db.Uuid
+  businessId           String  @map("business_id") @db.Uuid
+  name                String
+  photoAssetId         String? @map("photo_asset_id") @db.Uuid
+  qualification       String
+  specialty           String
+  experienceYears     Int     @map("experience_years")
+  servicesOffered     String[] @map("services_offered")
+  consultationFeeRange String? @map("consultation_fee_range")
+  isPrimary           Boolean @default(false) @map("is_primary")
+  displayOrder        Int     @default(0) @map("display_order")
+  aiPositioningNote   String? @map("ai_positioning_note")
+
+  business   Business    @relation(fields: [businessId], references: [id])
+  photoAsset MediaAsset? @relation("DoctorPhoto", fields: [photoAssetId], references: [id])
+
+  @@index([businessId])
+  @@index([photoAssetId])
+  @@map("doctors")
+}
+
+model MenuItem {
+  id               String  @id @default(uuid()) @db.Uuid
+  businessId        String  @map("business_id") @db.Uuid
+  photoAssetId      String? @map("photo_asset_id") @db.Uuid
+  name             String
+  category         String
+  description      String?
+  price            Int
+  isBestseller     Boolean @default(false) @map("is_bestseller")
+  isVegetarian     Boolean @default(false) @map("is_vegetarian")
+  isAvailable      Boolean @default(true) @map("is_available")
+  displayOrder     Int     @default(0) @map("display_order")
+  aiPositioningNote String? @map("ai_positioning_note")
+
+  business   Business    @relation(fields: [businessId], references: [id])
+  photoAsset MediaAsset? @relation("MenuItemPhoto", fields: [photoAssetId], references: [id])
+
+  @@index([businessId])
+  @@index([photoAssetId])
+  @@map("menu_items")
+}
+
+model SalonService {
+  id               String  @id @default(uuid()) @db.Uuid
+  businessId        String  @map("business_id") @db.Uuid
+  photoAssetId      String? @map("photo_asset_id") @db.Uuid
+  name             String
+  category         String
+  description      String?
+  durationMinutes  String? @map("duration_minutes")
+  priceRange       String? @map("price_range")
+  isFeatured       Boolean @default(false) @map("is_featured")
+  displayOrder     Int     @default(0) @map("display_order")
+  aiPositioningNote String? @map("ai_positioning_note")
+
+  business   Business    @relation(fields: [businessId], references: [id])
+  photoAsset MediaAsset? @relation("SalonServicePhoto", fields: [photoAssetId], references: [id])
+
+  @@index([businessId])
+  @@index([photoAssetId])
+  @@map("salon_services")
+}

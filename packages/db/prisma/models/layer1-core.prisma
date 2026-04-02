@@ -71,6 +71,10 @@ model Business {
   clinicDetails      ClinicDetails?
   salonDetails       SalonDetails?
   coachingDetails    CoachingDetails?
+  facultyMembers     FacultyMember[]
+  doctors            Doctor[]
+  menuItems          MenuItem[]
+  salonServices      SalonService[]
 
   @@index([userId])
   @@index([categoryId])

@@ -11,5 +11,16 @@ router.post(
     authMiddleware,
     businessController.initWebsite.bind(businessController),
 );
+router.post(
+    "/init-category-questions",
+    authMiddleware,
+    businessController.initCategoryQuestions.bind(businessController),
+)
+router.post(
+    "/init-data-sources",
+    authMiddleware,
+    businessController.initBusinessDataSources.bind(businessController),
+)
+router.get("/categories", businessController.getCategory.bind(businessController));
 
 export default router;

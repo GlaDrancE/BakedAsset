@@ -1,22 +1,12 @@
-import styles from "./page.module.css";
-import { ClerkAuthButtons } from "./clerk-auth-buttons";
+"use client";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const navigate = useRouter();
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <h1
-          style={{
-            fontFamily: "var(--font-geist-sans)",
-            fontSize: 28,
-            margin: 0,
-          }}
-        >
-          Clerk authentication
-        </h1>
-
-        <ClerkAuthButtons />
-      </main>
+    <div className="">
+      <button onClick={() => navigate.push("/create-website")} className="p-4">Create website</button>
     </div>
   );
 }

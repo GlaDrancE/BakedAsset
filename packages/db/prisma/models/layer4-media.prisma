@@ -14,6 +14,10 @@ model MediaAsset {
 
   business        Business         @relation(fields: [businessId], references: [id])
   processedImages ProcessedImage[]
+  facultyMemberPhotos FacultyMember[] @relation("FacultyMemberPhoto")
+  doctorPhotos        Doctor[]        @relation("DoctorPhoto")
+  menuItemPhotos      MenuItem[]      @relation("MenuItemPhoto")
+  salonServicePhotos  SalonService[]  @relation("SalonServicePhoto")
 
   @@index([businessId])
   @@map("media_assets")
