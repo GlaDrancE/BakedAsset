@@ -72,6 +72,26 @@ export async function extractProfile(page: any) {
 
     const phone = await page.locator('button[data-item-id^="phone"]').innerText().catch(() => null);
 
+    // Google Maps: the "Website:" entry is rendered as an <a> with aria-label like:
+    //   aria-label="Website: idealacademyofscience.org "
+    // We want the actual website URL (the anchor's `href`), not "Copy website" buttons.
+    const rawWebsite =
+        (await page
+            .locator('a[href][aria-label^="Website:" i]')
+            .first()
+            .getAttribute("href")
+            .catch(() => null)) ?? null;
+
+    // Fallback for layouts where "Website:" isn't exposed but "Open website" is.
+    const fallbackWebsite =
+        (await page
+            .locator('a[href][aria-label^="Open website" i]')
+            .first()
+            .getAttribute("href")
+            .catch(() => null)) ?? null;
+
+    const website = (rawWebsite ?? fallbackWebsite)?.trim() ?? null;
+
     return {
         name,
         rating,
@@ -79,6 +99,7 @@ export async function extractProfile(page: any) {
         address,
         businessHours,
         bio,
-        phone
+        phone,
+        website
     };
 }

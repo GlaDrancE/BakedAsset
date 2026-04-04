@@ -8,7 +8,7 @@ import { searchCompetitors } from './competitor-search.ts'
 
 
 
-export const scrapGoogleBusiness = async (query: string, dataSourceId: string) => {
+export const scrapGoogleBusiness = async (query: string, dataSourceId?: string, businessId?: string) => {
     const browser = await createBrowser();
     const page = await browser.newPage();
 
@@ -31,10 +31,11 @@ export const scrapGoogleBusiness = async (query: string, dataSourceId: string) =
 
         } else {
             await searchBusiness(page, normalizedQuery)
-            const competitors = await searchCompetitors(page, 5)
+            const competitors = await searchCompetitors(page, 2)
+            console.log(competitors)
             return {
-                dataSourceId,
-                ...competitors,
+                businessId,
+                competitors,
             }
 
         }

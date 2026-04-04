@@ -35,7 +35,7 @@ model BusinessReview {
   id               String @id @default(uuid()) @db.Uuid
   scrapedProfileId String @map("scraped_profile_id") @db.Uuid
   author           String
-  rating           Int
+  rating           Int?
   content          String
   source           String
 

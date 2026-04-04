@@ -3,12 +3,9 @@ import { extractReviews } from "./review.ts";
 
 export const searchCompetitors = async (page: any, topN: number = 5) => {
 
-    console.log("searching for competitors")
-
     const competitors = [];
     let prevTitle = await page.locator("h1.DUwDvf").first().innerText().catch(() => "");
 
-    console.log("prevTitle", prevTitle)
 
     for (let i = 0; i < topN; i++) {
         // Re-query each iteration to avoid stale/updated locators

@@ -21,6 +21,11 @@ router.post(
     authMiddleware,
     businessController.initBusinessDataSources.bind(businessController),
 )
+router.post(
+    "/init-create-competitor-query",
+    authMiddleware,
+    businessController.initCreateCompetitorQuery.bind(businessController),
+)
 router.get("/categories", businessController.getCategory.bind(businessController));
 
 export default router;

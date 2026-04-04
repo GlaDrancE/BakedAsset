@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { BusinessService } from "../services/business.service.ts";
-import { coachingDetailsSchema, InitBusinessDataSourceInput, InitWebsiteInput } from "@repo/common";
+import { coachingDetailsSchema, InitBusinessDataSourceInput, InitWebsiteInput, InitCreateCompetitorQuery } from "@repo/common";
 import { z } from "zod";
 
 export class BusinessController {
@@ -25,7 +25,7 @@ export class BusinessController {
             const payload = InitWebsiteInput.parse(req.body)
             const business = await this.businessService.initWebsite(userId, payload);
 
-            res.status(201).json({ business });
+            res.status(200).json({ business });
         } catch (error) {
             const message = error instanceof Error ? error.message : "Internal Server Error";
             res.status(message.startsWith("Invalid ") ? 400 : 500).json({ error: message });
@@ -43,7 +43,7 @@ export class BusinessController {
 
             const payload = coachingDetailsSchema.parse(req.body)
             const business = await this.businessService.initWebsiteQuestions(userId, payload);
-            res.status(201).json({ business });
+            res.status(200).json({ business });
         } catch (error) {
             this.sendServerError(res, error as Error);
         }
@@ -58,8 +58,24 @@ export class BusinessController {
             }
             const payload = InitBusinessDataSourceInput.parse(req.body)
             const business = await this.businessService.initBusinessDataSources(userId, payload);
-            res.status(201).json({ business });
+            res.status(200).json({ business });
         } catch (error) {
+            this.sendServerError(res, error as Error);
+        }
+    }
+
+    async initCreateCompetitorQuery(req: Request, res: Response): Promise<void> {
+        try {
+            const { userId } = req.auth;
+            if (!userId) {
+                this.sendServerError(res, new Error("Unauthorized"));
+                return;
+            }
+            const payload = InitCreateCompetitorQuery.parse(req.body);
+            const result = await this.businessService.initCreateCompetitorQuery(userId, payload.businessId, payload.query);
+            res.status(200).json({ result });
+        }
+        catch (error) {
             this.sendServerError(res, error as Error);
         }
     }
