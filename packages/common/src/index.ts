@@ -2,6 +2,7 @@ export * from "./entities/init-website.entity.ts"
 export * from "./entities/init-category-questions.ts"
 export * from "./entities/init-business-data-sources.ts"
 export * from "./entities/init-create-competitor-search.ts"
+export * from "./entities/init-business-analysis.ts"
 export * from "./utils/text-mutation.ts"
 
 export * from "./bucket-storage/index.ts"

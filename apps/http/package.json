@@ -13,7 +13,8 @@
     "@repo/db": "workspace:*",
     "@repo/types": "workspace:*",
     "@repo/scrappers": "workspace:*",
-    "@repo/typescript-config": "workspace:*"
+    "@repo/typescript-config": "workspace:*",
+    "@app/ai-engine": "workspace:*"
   },
   "keywords": [],
   "author": "",

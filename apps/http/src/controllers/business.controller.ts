@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { BusinessService } from "../services/business.service.ts";
-import { coachingDetailsSchema, InitBusinessDataSourceInput, InitWebsiteInput, InitCreateCompetitorQuery } from "@repo/common";
+import { coachingDetailsSchema, InitBusinessDataSourceInput, InitWebsiteInput, InitCreateCompetitorQuery, InitBusinessAnalysisInput } from "@repo/common";
 import { z } from "zod";
 
 export class BusinessController {
@@ -73,6 +73,21 @@ export class BusinessController {
             }
             const payload = InitCreateCompetitorQuery.parse(req.body);
             const result = await this.businessService.initCreateCompetitorQuery(userId, payload.businessId, payload.query);
+            res.status(200).json({ result });
+        }
+        catch (error) {
+            this.sendServerError(res, error as Error);
+        }
+    }
+    async initBusinessAnalysis(req: Request, res: Response): Promise<void> {
+        try {
+            const { userId } = req.auth;
+            if (!userId) {
+                this.sendServerError(res, new Error("Unauthorized"));
+                return;
+            }
+            const payload = InitBusinessAnalysisInput.parse(req.body);
+            const result = await this.businessService.initBusinessAnalysis(userId, payload.businessId);
             res.status(200).json({ result });
         }
         catch (error) {

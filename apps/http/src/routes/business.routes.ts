@@ -26,6 +26,11 @@ router.post(
     authMiddleware,
     businessController.initCreateCompetitorQuery.bind(businessController),
 )
+router.post(
+    "/init-business-analysis",
+    authMiddleware,
+    businessController.initBusinessAnalysis.bind(businessController),
+)
 router.get("/categories", businessController.getCategory.bind(businessController));
 
 export default router;

@@ -4,6 +4,7 @@ import { assertNonEmptyString, businessLinksQueue, coachingDetailsSchema, google
 import z from "zod";
 import { findOrCreateCategory } from "../utils/create-business-category.ts";
 import { createCompetitorQuery } from "../utils/competitor-query.ts";
+import { businessAnalysis } from "@app/ai-engine";
 
 
 
@@ -247,6 +248,22 @@ export class BusinessService {
         } catch (error) {
             console.error(error)
             throw new Error("Failed to initialize create competitor query");
+        }
+    }
+
+    async initBusinessAnalysis(userId: string, businessId: string) {
+        try {
+            if (!userId) {
+                throw new Error("Invalid userId");
+            }
+            if (!businessId) {
+                throw new Error("Invalid businessId");
+            }
+            await businessAnalysis(businessId)
+            return true;
+        } catch (error) {
+            console.error(error)
+            throw new Error("Failed to initialize business analysis");
         }
     }
     async getCategory() {

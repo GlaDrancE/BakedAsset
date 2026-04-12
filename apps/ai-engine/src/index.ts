@@ -50,4 +50,3 @@ export const businessAnalysis = async (businessId: string) => {
     })
     return business_strategies;
 }
-businessAnalysis("6c5af940-680f-4b5f-b22e-7d4c41d199b0").then(console.log).catch(console.error);
