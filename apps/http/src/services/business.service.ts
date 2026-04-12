@@ -1,6 +1,6 @@
 import { prisma } from "@repo/db";
 import { Language } from "@repo/db/enums";
-import { assertNonEmptyString, businessLinksQueue, coachingDetailsSchema, InitBusinessDataSourceInput, instagramQueue, type InitWebsiteInput } from "@repo/common";
+import { assertNonEmptyString, businessLinksQueue, coachingDetailsSchema, googleImagesQueue, InitBusinessDataSourceInput, instagramQueue, type InitWebsiteInput } from "@repo/common";
 import z from "zod";
 import { findOrCreateCategory } from "../utils/create-business-category.ts";
 import { createCompetitorQuery } from "../utils/competitor-query.ts";
@@ -203,6 +203,7 @@ export class BusinessService {
                 if (dataSource.sourceType === "google") {
                     console.log("adding google business link to queue", dataSource.url);
                     await businessLinksQueue.add("google_business_link", { url: dataSource.url, dataSourceId: dataSource.id });
+                    await googleImagesQueue.add("google_images", { url: dataSource.url, businessId });
                 } else if (dataSource.sourceType === "instagram") {
                     console.log("adding instagram link to queue", dataSource.url);
                     await instagramQueue.add("instagram_link", { url: dataSource.url, dataSourceId: dataSource.id });

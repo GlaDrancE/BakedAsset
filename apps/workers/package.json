@@ -10,13 +10,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "apify-client": "^2.22.3",
+    "axios": "^1.15.0",
     "bullmq": "^5.71.1",
+    "cheerio": "^1.2.0",
+    "dotenv": "^17.3.1",
+    "image-size": "^2.0.2",
     "ioredis": "^5.10.1"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
-    "@repo/scrappers": "workspace:*",
     "@repo/common": "workspace:*",
-    "@repo/db": "workspace:*"
+    "@repo/db": "workspace:*",
+    "@repo/scrappers": "workspace:*",
+    "@repo/typescript-config": "workspace:*"
   }
 }

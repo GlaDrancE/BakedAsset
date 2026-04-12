@@ -1,9 +1,10 @@
 import { Worker } from "bullmq";
 import IORedis from 'ioredis';
-import { scrapGoogleBusiness, scrapInstagram } from "@repo/scrappers";
+import { scrapeAndStoreGoogleImages, scrapGoogleBusiness, scrapInstagram } from "@repo/scrappers";
 import { storeGoogleBusinessDetailsInDb } from "../queries/store-gbm";
 import { storeGoogleBusinessCompetitorsInDb } from "../queries/store-competitor";
 import { storeInstagramProfileInDb } from "../queries/store-instagram";
+import { storeImagesInDb } from "../queries/store-images";
 
 const connection = new IORedis({ maxRetriesPerRequest: null })
 // TODO: add queue name into label
@@ -62,3 +63,22 @@ export const instagramWorker = new Worker('instagram', async (job) => {
         throw error
     }
 }, { connection })
+
+export const googleImagesWorker = new Worker("google_images", async (job) => {
+    try {
+        const url = (job.data?.url ?? "").trim();
+        if (!url) {
+            throw new Error("Missing url in job payload");
+        }
+        await scrapeAndStoreGoogleImages(url, job.data?.businessId).then(async result => {
+            await storeImagesInDb(result, job.data?.businessId)
+            console.log("Images scraped and stored...")
+        }).catch(error => {
+            console.error(error)
+            throw error
+        })
+    } catch (error) {
+        console.error(error)
+        throw error
+    }
+})
